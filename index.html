@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Go Up India - Official</title>
+    
+    <link rel="icon" type="image/png" href="men.logo.png">
+
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" rel="stylesheet">
+    
+    <style>
+        /* --- 1. GLOBAL VARIABLES --- */
+        :root {
+            --bg: #F8FAFC;         
+            --surface: #FFFFFF;    
+            --text: #1E293B;       
+            --text-light: #64748B; 
+            --primary: #8B5CF6;    
+            --accent: #0EA5E9;     
+            --border-light: #E2E8F0; 
+            --header-bg: rgba(255, 255, 255, 0.9);
+            --shadow: 0 4px 15px -5px rgba(0,0,0,0.05);
+            --grid-color: rgba(0, 0, 0, 0.03);
+            
+            /* Special Colors */
+            --hot: #F59E0B;        
+            --success: #10B981;    
+            --gold: #FFD700;
+        }
+
+        /* --- 2. DARK MODE --- */
+        body.dark-mode {
+            --bg: #0B1120;
+            --surface: #1E293B;
+            --text: #F8FAFC;
+            --text-light: #94A3B8;
+            --border-light: rgba(255,255,255,0.1);
+            --header-bg: rgba(15, 23, 42, 0.9);
+            --shadow: 0 10px 30px rgba(0,0,0,0.5);
+            --grid-color: rgba(255, 255, 255, 0.03);
+        }
+
+        /* --- 3. BASIC RESET --- */
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Plus Jakarta Sans', sans-serif; transition: background 0.3s, color 0.3s, border-color 0.3s; }
+        
+        body { 
+            background-color: var(--bg);
+            background-image: linear-gradient(var(--grid-color) 1px, transparent 1px), linear-gradient(90deg, var(--grid-color) 1px, transparent 1px);
+            background-size: 30px 30px;
+            color: var(--text); overflow-x: hidden; scroll-behavior: smooth; 
+            animation: moveGrid 20s linear infinite;
+        }
+
+        @keyframes moveGrid { 0% { background-position: 0 0; } 100% { background-position: 30px 30px; } }
+
+        /* --- 🔥 4. 11LABS STYLE ADVANCED PRELOADER 🔥 --- */
+        #preloader { 
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
+            background: #050505; /* Deep Black for Premium Feel */
+            z-index: 9999; display: flex; justify-content: center; align-items: center; flex-direction: column; 
+            transition: opacity 0.8s ease; 
+        }
+
+        .loader-container {
+            position: relative;
+            width: 120px; height: 120px;
+            display: flex; justify-content: center; align-items: center;
+        }
+
+        /* The Glowing Aura behind the logo */
+        .loader-aura {
+            position: absolute; width: 100%; height: 100%;
+            border-radius: 50%;
+            background: conic-gradient(from 0deg, transparent 0%, #8B5CF6 50%, #0EA5E9 100%);
+            filter: blur(20px);
+            animation: rotateAura 2s linear infinite;
+            opacity: 0.6;
+        }
+
+        /* The Sharp Ring */
+        .loader-ring {
+            position: absolute; width: 100%; height: 100%;
+            border-radius: 50%;
+            border: 2px solid transparent;
+            border-top-color: #8B5CF6;
+            border-right-color: #0EA5E9;
+            animation: rotateAura 1.5s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+        }
+
+        /* The Logo Itself */
+        .loader-logo { 
+            width: 70px; height: 70px; border-radius: 50%; 
+            z-index: 2; position: relative; 
+            background: #000; padding: 2px;
+            box-shadow: 0 0 30px rgba(139, 92, 246, 0.3);
+            animation: breatheLogo 3s ease-in-out infinite;
+        }
+
+        /* Loading Bar below logo */
+        .loading-progress-container {
+            width: 150px; height: 3px; background: rgba(255,255,255,0.1);
+            border-radius: 10px; margin-top: 30px; overflow: hidden;
+        }
+        .loading-progress-bar {
+            height: 100%; width: 0%; background: linear-gradient(90deg, #8B5CF6, #0EA5E9);
+            animation: loadBar 2.5s ease-in-out forwards;
+        }
+
+        .loader-text { 
+            color: #94A3B8; margin-top: 15px; font-weight: 500; font-size: 12px; letter-spacing: 2px; text-transform: uppercase; 
+            animation: textFade 1s infinite alternate;
+        }
+
+        @keyframes rotateAura { 0% {transform: rotate(0deg);} 100% {transform: rotate(360deg);} }
+        @keyframes breatheLogo { 0%, 100% {transform: scale(0.95);} 50% {transform: scale(1.05);} }
+        @keyframes loadBar { 0% {width: 0%;} 50% {width: 60%;} 100% {width: 100%;} }
+        @keyframes textFade { 0% {opacity: 0.5;} 100% {opacity: 1;} }
+
+
+        /* --- 5. HEADER --- */
+        .app-header { 
+            position: fixed; top: 0; left: 0; width: 100%; height: 65px; 
+            background: var(--header-bg); backdrop-filter: blur(12px); 
+            display: flex; align-items: center; justify-content: space-between; 
+            padding: 0 20px; border-bottom: 1px solid var(--border-light); z-index: 1000; 
+        }
+
+        .header-left { display: flex; align-items: center; }
+        .header-logo { width: 38px; height: 38px; border-radius: 50%; margin-right: 12px; border: 1px solid var(--border-light); }
+        .header-text-col { display: flex; flex-direction: column; justify-content: center; }
+        .header-title { font-size: 16px; font-weight: 800; line-height: 1.1; background: linear-gradient(to right, #8B5CF6, #0EA5E9); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .header-subtitle { font-size: 10px; color: var(--primary); font-weight: 600; letter-spacing: 0.3px; margin-top: 2px; }
+        .theme-btn { background: var(--border-light); border: none; width: 35px; height: 35px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; color: var(--text); }
+
+        /* --- 6. MAIN CONTENT --- */
+        .main-content { padding: 90px 20px 50px 20px; display: flex; flex-direction: column; align-items: center; gap: 40px; max-width: 600px; margin: 0 auto; }
+
+        .hype-box { text-align: center; width: 100%; animation: fadeIn 0.8s ease-out; }
+        .hype-title { font-size: 26px; font-weight: 800; margin-bottom: 10px; background: linear-gradient(135deg, #8B5CF6 0%, #0EA5E9 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .hype-desc { font-size: 14px; color: var(--text-light); line-height: 1.6; font-weight: 500; background: var(--surface); padding: 20px; border-radius: 16px; border: 1px solid var(--border-light); box-shadow: var(--shadow); }
+        .hype-highlight { color: var(--primary); font-weight: 700; background: rgba(139, 92, 246, 0.1); padding: 2px 6px; border-radius: 4px; }
+
+        /* --- MAIN CARD --- */
+        .main-card { background: var(--surface); border: 1px solid var(--border-light); padding: 30px; border-radius: 24px; width: 100%; display: flex; flex-direction: column; align-items: center; gap: 20px; box-shadow: var(--shadow); }
+        .scanner-container { position: relative; width: 170px; height: 170px; display: flex; justify-content: center; align-items: center; border-radius: 20px; overflow: hidden; z-index: 1; }
+        .scanner-container::before { content: ''; position: absolute; width: 200%; height: 200%; background: conic-gradient(transparent 70%, #8B5CF6, #0EA5E9); animation: rotateLight 3s linear infinite; z-index: -2; }
+        .scanner-container::after { content: ''; position: absolute; inset: 4px; background: var(--surface); border-radius: 16px; z-index: -1; }
+        @keyframes rotateLight { 0% {transform: rotate(0deg);} 100% {transform: rotate(360deg);} }
+        .qr-code { width: 145px; height: 145px; object-fit: contain; z-index: 2; position: relative; }
+        .scan-text { color: var(--text-light); font-size: 13px; font-weight: 600; margin-top: -10px; }
+
+        .btn-launch { background: linear-gradient(135deg, #8B5CF6 0%, #3b82f6 100%); width: 100%; padding: 16px; border-radius: 14px; text-decoration: none; color: white; font-weight: 700; font-size: 17px; display: flex; justify-content: center; align-items: center; gap: 10px; box-shadow: 0 8px 20px -5px rgba(139, 92, 246, 0.5); transition: transform 0.2s; position: relative; overflow: hidden; }
+        .btn-launch:active { transform: scale(0.98); }
+        .btn-launch::before { content: ''; position: absolute; top: 0; left: -100%; width: 100%; height: 100%; background: linear-gradient(120deg, transparent, rgba(255, 255, 255, 0.4), transparent); animation: shimmer 2.5s infinite linear; }
+        @keyframes shimmer { 100% { left: 100%; } }
+
+        /* --- STATS & SECTIONS --- */
+        .stats-bar { display: flex; justify-content: space-between; width: 100%; background: var(--surface); padding: 15px; border-radius: 12px; border: 1px solid var(--border-light); }
+        .stat-item { text-align: center; width: 33%; }
+        .stat-num { font-size: 16px; font-weight: 800; color: var(--text); display: block; }
+        .stat-label { font-size: 10px; color: var(--text-light); font-weight: 600; text-transform: uppercase; }
+
+        .section-block { width: 100%; margin-top: 10px; }
+        .section-header { font-size: 18px; font-weight: 800; color: var(--text); margin-bottom: 15px; display: flex; align-items: center; gap: 8px; }
+        
+        .hero-card { background: var(--surface); border: 1px solid var(--border-light); padding: 25px; border-radius: 20px; text-align: left; box-shadow: var(--shadow); position: relative; overflow: hidden; }
+        .hero-card:hover { border-color: var(--primary); box-shadow: 0 15px 30px -10px rgba(139, 92, 246, 0.2); transform: translateY(-3px); }
+        .hc-icon-big { font-size: 48px; color: var(--primary); margin-bottom: 15px; }
+        .hc-title { font-size: 20px; font-weight: 800; margin-bottom: 10px; }
+        .hc-desc { font-size: 13px; color: var(--text-light); line-height: 1.6; margin-bottom: 20px; }
+        
+        .btn-secondary { display: inline-flex; align-items: center; gap: 8px; padding: 10px 20px; border-radius: 10px; text-decoration: none; font-weight: 700; font-size: 14px; color: var(--text); border: 2px solid var(--border-light); background: var(--surface); }
+        .btn-secondary:hover { border-color: var(--primary); color: var(--primary); }
+        .tag-badge { position: absolute; top: 20px; right: 20px; background: #FEE2E2; color: #EF4444; font-size: 10px; font-weight: 800; padding: 4px 8px; border-radius: 4px; text-transform: uppercase; }
+
+        .premium-card { background: linear-gradient(135deg, #1e1b4b 0%, #312e81 100%); color: white; border: 1px solid #4338ca; }
+        .premium-card .hc-title, .premium-card .hc-desc { color: white; }
+        .premium-badge { background: linear-gradient(45deg, #FFD700, #FDB931); color: #000; font-weight: 800; font-size: 10px; padding: 4px 8px; border-radius: 4px; position: absolute; top: 20px; right: 20px; }
+        .btn-premium { background: white; color: #312e81; border: none; width: 100%; justify-content: center; }
+
+        .reviews-slider { display: flex; gap: 15px; overflow-x: auto; padding-bottom: 10px; width: 100%; scrollbar-width: none; }
+        .review-card { min-width: 250px; background: var(--surface); border: 1px solid var(--border-light); padding: 20px; border-radius: 16px; }
+        .stars { color: #F59E0B; margin-bottom: 10px; font-size: 14px; }
+        .review-text { font-size: 12px; color: var(--text); line-height: 1.5; font-style: italic; margin-bottom: 15px; }
+        .reviewer { display: flex; align-items: center; gap: 10px; }
+        .r-avatar { width: 30px; height: 30px; background: var(--border-light); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 700; color: var(--text-light); }
+        .r-name { font-size: 12px; font-weight: 700; }
+        .r-loc { font-size: 10px; color: var(--text-light); }
+
+        .grid-features { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; width: 100%; }
+        .grid-box { background: var(--surface); border: 1px solid var(--border-light); padding: 15px; border-radius: 16px; text-align: center; }
+        .gb-icon { font-size: 28px; color: var(--accent); margin-bottom: 8px; }
+        .gb-title { font-size: 13px; font-weight: 700; }
+        .gb-desc { font-size: 11px; color: var(--text-light); }
+
+        .faq-item { background: var(--surface); border: 1px solid var(--border-light); border-radius: 12px; margin-bottom: 10px; overflow: hidden; }
+        .faq-item summary { padding: 15px; font-size: 14px; font-weight: 700; cursor: pointer; list-style: none; display: flex; justify-content: space-between; align-items: center; }
+        .faq-item summary::after { content: '+'; font-size: 18px; color: var(--primary); }
+        .faq-item[open] summary::after { content: '-'; }
+        .faq-item p { padding: 0 15px 15px 15px; font-size: 13px; color: var(--text-light); line-height: 1.5; margin: 0; }
+
+        .quick-links { display: flex; gap: 10px; flex-wrap: wrap; justify-content: center; margin-top: 20px; }
+        .btn-small-link { font-size: 12px; color: var(--text-light); text-decoration: none; font-weight: 600; padding: 6px 12px; border-radius: 30px; background: var(--border-light); transition: 0.2s; }
+        .copyright { color: var(--text-light); font-size: 12px; margin-top: 20px; font-weight: 500; padding-bottom: 20px; }
+
+        .fab-support { position: fixed; bottom: 25px; right: 25px; width: 55px; height: 55px; background: var(--primary); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; box-shadow: 0 10px 30px rgba(139, 92, 246, 0.4); z-index: 2000; animation: bounce 2s infinite; cursor: pointer; text-decoration: none; }
+        @keyframes bounce { 0%, 20%, 50%, 80%, 100% {transform: translateY(0);} 40% {transform: translateY(-10px);} 60% {transform: translateY(-5px);} }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+
+        .notification-toast { position: fixed; bottom: 20px; left: 20px; background: var(--surface); padding: 12px 16px; border-radius: 12px; box-shadow: 0 10px 30px rgba(0,0,0,0.2); border: 1px solid var(--border-light); display: flex; align-items: center; gap: 10px; transform: translateY(100px); opacity: 0; transition: all 0.5s cubic-bezier(0.68, -0.55, 0.27, 1.55); z-index: 1500; }
+        .notification-toast.show { transform: translateY(0); opacity: 1; }
+        .toast-icon { width: 30px; height: 30px; border-radius: 50%; background: #E0E7FF; display: flex; align-items: center; justify-content: center; font-size: 16px; }
+    </style>
+</head>
+<body>
+
+    <div id="preloader">
+        <div class="loader-container">
+            <div class="loader-aura"></div>
+            <div class="loader-ring"></div>
+            <img src="men.logo.png" alt="Logo" class="loader-logo">
+        </div>
+        <div class="loading-progress-container">
+            <div class="loading-progress-bar"></div>
+        </div>
+        <div class="loader-text">Initializing Neural Network...</div>
+    </div>
+
+    <div class="app-header">
+        <div class="header-left">
+            <img src="men.logo.png" alt="Logo" class="header-logo">
+            <div class="header-text-col">
+                <div class="header-title">Go Up India</div>
+                <div class="header-subtitle">Powered by Nikki AI</div>
+            </div>
+        </div>
+        <button class="theme-btn" onclick="toggleTheme()">
+            <span class="material-icons-round" id="theme-icon">dark_mode</span>
+        </button>
+    </div>
+
+    <div class="main-content">
+        
+        <div class="hype-box">
+            <div class="hype-title">India's Ultimate AI Platform</div>
+            <div class="hype-desc">
+                The future is here. Access <span class="hype-highlight">Smart AI Chat</span>, generate <span class="hype-highlight">Realistic Videos</span>, and explore our exclusive <span class="hype-highlight">Viral Video Library</span>. 🚀
+            </div>
+        </div>
+
+        <div class="main-card">
+            <div class="scanner-container">
+                <img src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=https://mdfahim00.pythonanywhere.com/" class="qr-code">
+            </div>
+            <p class="scan-text">Scan to Visit Website</p>
+            <a href="https://mdfahim00.pythonanywhere.com/" class="btn-launch">
+                Get Started Now <span class="material-icons-round">bolt</span>
+            </a>
+        </div>
+
+        <div class="stats-bar">
+            <div class="stat-item"><span class="stat-num">1M+</span><span class="stat-label">Users</span></div>
+            <div class="stat-item"><span class="stat-num">500k+</span><span class="stat-label">Videos</span></div>
+            <div class="stat-item"><span class="stat-num">4.9★</span><span class="stat-label">Rating</span></div>
+        </div>
+
+        <div class="section-block">
+            <div class="section-header"><span class="material-icons-round" style="color:#F59E0B;">whatshot</span> Trending AI Library</div>
+            <div class="hero-card" style="border-left: 4px solid #F59E0B;">
+                <div class="tag-badge" style="background:#FEF3C7; color:#D97706;">HOT</div>
+                <span class="material-icons-round hc-icon-big" style="color: #F59E0B;">video_library</span>
+                <div class="hc-title">Pre-Made Viral Videos</div>
+                <div class="hc-desc">Access our vast library of ready-made popular AI videos. Download trending content instantly.</div>
+                <a href="https://mdfahim00.pythonanywhere.com/" class="btn-secondary" style="color:#D97706; border-color:#F59E0B;">Browse Library <span class="material-icons-round">collections</span></a>
+            </div>
+        </div>
+
+        <div class="section-block">
+            <div class="section-header"><span class="material-icons-round" style="color:var(--success);">palette</span> AI Image Creator</div>
+            <div class="hero-card" style="border-left: 4px solid var(--success);">
+                <div class="tag-badge" style="background:#D1FAE5; color:#059669;">NEW</div>
+                <span class="material-icons-round hc-icon-big" style="color: var(--success);">image</span>
+                <div class="hc-title">Text-to-Image Art</div>
+                <div class="hc-desc">Describe any scene, and watch Nikki AI create a high-quality 4K image in seconds.</div>
+                <a href="https://mdfahim00.pythonanywhere.com/" class="btn-secondary" style="color:var(--success); border-color:var(--success);">Create Images <span class="material-icons-round">brush</span></a>
+            </div>
+        </div>
+
+        <div class="section-block">
+            <div class="section-header"><span class="material-icons-round" style="color:var(--primary);">psychology</span> Smart AI Intelligence</div>
+            <div class="hero-card">
+                <span class="material-icons-round hc-icon-big">auto_awesome</span>
+                <div class="hc-title">Ask. Solve. Create.</div>
+                <div class="hc-desc">Use our advanced Neural Network to solve complex problems, write code, or get instant expert advice.</div>
+                <a href="https://mdfahim00.pythonanywhere.com/Ai.File.html" class="btn-secondary">Try AI Chat <span class="material-icons-round">arrow_forward</span></a>
+            </div>
+        </div>
+
+        <div class="section-block">
+            <div class="section-header"><span class="material-icons-round" style="color:var(--accent);">videocam</span> AI Video Generator</div>
+            <div class="hero-card" style="border-left: 4px solid var(--accent);">
+                <span class="material-icons-round hc-icon-big" style="color: var(--accent);">movie_filter</span>
+                <div class="hc-title">Text-to-Cinema Magic</div>
+                <div class="hc-desc">Turn your words into stunning, high-definition videos instantly. Perfect for reels and ads.</div>
+                <a href="https://mdfahim00.pythonanywhere.com/ai.studia.html" class="btn-secondary" style="color:var(--accent); border-color:var(--accent);">Create Video <span class="material-icons-round">play_circle</span></a>
+            </div>
+        </div>
+
+        <div class="section-block">
+            <div class="section-header"><span class="material-icons-round" style="color:#FFD700;">diamond</span> Upgrade to Pro</div>
+            <div class="hero-card premium-card">
+                <div class="premium-badge">BEST VALUE</div>
+                <span class="material-icons-round hc-icon-big" style="color: #FFD700;">workspace_premium</span>
+                <div class="hc-title">Go Up Premium</div>
+                <div class="hc-desc">Unlock unlimited generations, 4K video rendering, zero wait time, and exclusive access to new AI models.</div>
+                <a href="#" class="btn-secondary btn-premium">Get Premium Access <span class="material-icons-round">lock_open</span></a>
+            </div>
+        </div>
+
+        <div class="section-block">
+            <div class="section-header"><span class="material-icons-round" style="color:#F43F5E;">favorite</span> Trusted by Users</div>
+            <div class="reviews-slider">
+                <div class="review-card">
+                    <div class="stars">★★★★★</div>
+                    <div class="review-text">"This is hands down the best AI tool in India. The video generation is super realistic!"</div>
+                    <div class="reviewer"><div class="r-avatar">R</div><div><div class="r-name">Rahul Sharma</div><div class="r-loc">New Delhi</div></div></div>
+                </div>
+                <div class="review-card">
+                    <div class="stars">★★★★★</div>
+                    <div class="review-text">"I use the Viral Video Library for my Instagram reels. It saved me so much time. Amazing!"</div>
+                    <div class="reviewer"><div class="r-avatar">P</div><div><div class="r-name">Priya Patel</div><div class="r-loc">Mumbai</div></div></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="section-block">
+            <div class="section-header"><span class="material-icons-round" style="color:var(--text-light);">help</span> FAQs</div>
+            <details class="faq-item">
+                <summary>Is this service free?</summary>
+                <p>Yes, the basic features are free. You can upgrade to Pro for advanced features.</p>
+            </details>
+            <details class="faq-item">
+                <summary>How fast is the video generation?</summary>
+                <p>Most videos are generated within 10-20 seconds depending on the complexity.</p>
+            </details>
+            <details class="faq-item">
+                <summary>Can I use videos for YouTube?</summary>
+                <p>Absolutely! All generated content is copyright-free for commercial use.</p>
+            </details>
+        </div>
+
+        <div class="section-block">
+             <div class="section-header" style="font-size: 16px;"><span class="material-icons-round">verified</span> Core Advantages</div>
+            <div class="grid-features">
+                <div class="grid-box"><span class="material-icons-round gb-icon">security</span><div class="gb-title">Secure</div><div class="gb-desc">Encrypted Data</div></div>
+                <div class="grid-box"><span class="material-icons-round gb-icon">speed</span><div class="gb-title">Fast</div><div class="gb-desc">Zero Latency</div></div>
+            </div>
+        </div>
+
+        <div class="quick-links">
+            <a href="#" class="btn-small-link">Support</a>
+            <a href="#" class="btn-small-link">Community</a>
+            <a href="#" class="btn-small-link">Premium</a>
+        </div>
+
+        <div class="copyright">&copy; 2026 Go Up India. All rights reserved.</div>
+    </div>
+
+    <a href="mailto:mdfahimking3123@gmail.com" class="fab-support">
+        <span class="material-icons-round">support_agent</span>
+    </a>
+
+    <div id="notification-container"></div>
+
+    <script>
+        // --- 1. PRELOADER ANIMATION ---
+        window.addEventListener('load', function() {
+            const preloader = document.getElementById('preloader');
+            // Show preloader for 2.5 seconds then fade out
+            setTimeout(() => {
+                preloader.style.opacity = '0';
+                setTimeout(() => { preloader.style.display = 'none'; }, 800);
+            }, 2500); 
+        });
+
+        // --- 2. DARK MODE ---
+        function toggleTheme() {
+            document.body.classList.toggle('dark-mode');
+            const icon = document.getElementById('theme-icon');
+            icon.textContent = document.body.classList.contains('dark-mode') ? 'light_mode' : 'dark_mode';
+        }
+
+        // --- 3. LIVE NOTIFICATIONS ---
+        const messages = [
+            { name: "Rahul from Delhi", text: "created a 4K Video 🎥", icon: "movie" },
+            { name: "Sanya from Mumbai", text: "upgraded to Pro 🚀", icon: "diamond" },
+            { name: "Amit from Bangalore", text: "generated an image 🎨", icon: "palette" },
+            { name: "New User", text: "joined Go Up India 👋", icon: "person_add" },
+            { name: "Vikram from Pune", text: "asked AI a question 💡", icon: "psychology" }
+        ];
+
+        const container = document.getElementById('notification-container');
+        function showNotification() {
+            const msg = messages[Math.floor(Math.random() * messages.length)];
+            const toast = document.createElement('div');
+            toast.className = 'notification-toast';
+            toast.innerHTML = `
+                <div class="toast-icon"><span class="material-icons-round" style="font-size:16px; color:#4F46E5;">${msg.icon}</span></div>
+                <div><div style="font-size:11px; font-weight:700; color:var(--text);">${msg.name}</div><div style="font-size:10px; color:var(--text-light);">${msg.text}</div></div>
+            `;
+            container.appendChild(toast);
+            setTimeout(() => { toast.classList.add('show'); }, 100);
+            setTimeout(() => { toast.classList.remove('show'); setTimeout(() => { toast.remove(); }, 500); }, 4000);
+        }
+        setTimeout(showNotification, 3000);
+        setInterval(showNotification, 7000);
+    </script>
+</body>
+</html>
