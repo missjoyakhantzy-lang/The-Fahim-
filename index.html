@@ -1,13 +1,1798 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Doggy Drama Club</title>
-    <script type="module" crossorigin src="./assets/index-B5uZn9iV.js"></script>
-    <link rel="stylesheet" crossorigin href="./assets/index-BqznFnGs.css">
-  </head>
-  <body>
-    <div id="root"></div>
-  </body>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Doggy Drama Club — Chihuahua & Pitbull Comedy</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<style>
+  :root {
+    --black: #0a0a0a;
+    --white: #f5f0e8;
+    --gold: #e8c44a;
+    --red: #d63031;
+    --dark: #111115;
+    --card: #16161a;
+    --border: rgba(232,196,74,0.2);
+    --font-display: 'Bebas Neue', sans-serif;
+    --font-body: 'Syne', sans-serif;
+    --font-text: 'DM Sans', sans-serif;
+  }
+
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--black);
+    color: var(--white);
+    font-family: var(--font-text);
+    overflow-x: hidden;
+    cursor: none;
+  }
+
+  /* CUSTOM CURSOR */
+  .cursor {
+    width: 12px; height: 12px;
+    background: var(--gold);
+    border-radius: 50%;
+    position: fixed;
+    top: 0; left: 0;
+    pointer-events: none;
+    z-index: 9999;
+    transition: transform 0.1s;
+    mix-blend-mode: difference;
+  }
+  .cursor-follower {
+    width: 36px; height: 36px;
+    border: 1.5px solid var(--gold);
+    border-radius: 50%;
+    position: fixed;
+    top: 0; left: 0;
+    pointer-events: none;
+    z-index: 9998;
+    transition: all 0.15s ease;
+    opacity: 0.6;
+  }
+
+  /* LOADER */
+  #loader {
+    position: fixed;
+    inset: 0;
+    background: var(--black);
+    z-index: 10000;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 24px;
+    transition: opacity 0.6s ease, visibility 0.6s;
+  }
+  #loader.hidden { opacity: 0; visibility: hidden; }
+
+  .loader-logo {
+    font-family: var(--font-display);
+    font-size: clamp(2.5rem, 8vw, 5rem);
+    letter-spacing: 6px;
+    color: var(--gold);
+    animation: pulse 1.2s ease-in-out infinite;
+  }
+  @keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:.5;transform:scale(.97)} }
+
+  .loader-bar-track {
+    width: 260px; height: 3px;
+    background: rgba(255,255,255,0.08);
+    border-radius: 99px;
+    overflow: hidden;
+  }
+  .loader-bar {
+    height: 100%;
+    background: linear-gradient(90deg, var(--gold), var(--red));
+    border-radius: 99px;
+    width: 0%;
+    animation: loadfill 2s ease forwards;
+  }
+  @keyframes loadfill { to { width: 100%; } }
+
+  .loader-text {
+    font-family: var(--font-body);
+    font-size: .78rem;
+    letter-spacing: 4px;
+    color: rgba(245,240,232,0.4);
+    text-transform: uppercase;
+  }
+
+  /* NOISE OVERLAY */
+  body::after {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 1;
+    opacity: .35;
+  }
+
+  /* NAV */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 1000;
+    padding: 0 clamp(20px, 5vw, 80px);
+    height: 72px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: rgba(10,10,10,0.7);
+    backdrop-filter: blur(20px);
+    border-bottom: 1px solid var(--border);
+    transition: all .3s;
+  }
+  nav.scrolled {
+    height: 60px;
+    background: rgba(10,10,10,0.95);
+  }
+
+  .nav-logo {
+    font-family: var(--font-display);
+    font-size: 1.6rem;
+    letter-spacing: 3px;
+    color: var(--gold);
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .nav-logo i { font-size: 1.2rem; color: var(--red); }
+
+  .nav-links {
+    display: flex;
+    gap: 36px;
+    list-style: none;
+  }
+  .nav-links a {
+    font-family: var(--font-body);
+    font-size: .78rem;
+    letter-spacing: 2.5px;
+    text-transform: uppercase;
+    color: rgba(245,240,232,0.6);
+    text-decoration: none;
+    position: relative;
+    transition: color .3s;
+  }
+  .nav-links a::after {
+    content: '';
+    position: absolute;
+    bottom: -4px; left: 0;
+    width: 0; height: 1.5px;
+    background: var(--gold);
+    transition: width .3s ease;
+  }
+  .nav-links a:hover { color: var(--white); }
+  .nav-links a:hover::after { width: 100%; }
+
+  .nav-cta {
+    background: var(--gold);
+    color: var(--black) !important;
+    padding: 9px 22px;
+    border-radius: 2px;
+    font-weight: 700 !important;
+    letter-spacing: 2px !important;
+    transition: background .3s, transform .2s !important;
+  }
+  .nav-cta:hover { background: #f0d060 !important; transform: translateY(-1px); }
+  .nav-cta::after { display: none !important; }
+
+  .hamburger {
+    display: none;
+    flex-direction: column;
+    gap: 5px;
+    cursor: pointer;
+    padding: 6px;
+  }
+  .hamburger span {
+    display: block;
+    width: 24px; height: 2px;
+    background: var(--white);
+    transition: all .3s;
+  }
+
+  /* MOBILE NAV */
+  .mobile-nav {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: var(--black);
+    z-index: 999;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 36px;
+  }
+  .mobile-nav.open { display: flex; }
+  .mobile-nav a {
+    font-family: var(--font-display);
+    font-size: 2.5rem;
+    letter-spacing: 4px;
+    color: var(--white);
+    text-decoration: none;
+    transition: color .3s;
+  }
+  .mobile-nav a:hover { color: var(--gold); }
+
+  /* HERO */
+  #hero {
+    min-height: 100vh;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    align-items: center;
+    padding: 100px clamp(20px, 5vw, 80px) 60px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .hero-bg {
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(ellipse 60% 70% at 70% 50%, rgba(214,48,49,0.07) 0%, transparent 70%),
+      radial-gradient(ellipse 40% 50% at 20% 70%, rgba(232,196,74,0.06) 0%, transparent 60%);
+    pointer-events: none;
+  }
+
+  .hero-grid-lines {
+    position: absolute;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(232,196,74,0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(232,196,74,0.03) 1px, transparent 1px);
+    background-size: 60px 60px;
+    pointer-events: none;
+  }
+
+  .hero-left { position: relative; z-index: 2; }
+
+  .hero-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-family: var(--font-body);
+    font-size: .7rem;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    color: var(--gold);
+    border: 1px solid rgba(232,196,74,0.35);
+    padding: 7px 14px;
+    border-radius: 2px;
+    margin-bottom: 24px;
+    opacity: 0;
+    animation: fadeUp .7s .5s forwards;
+  }
+  .hero-tag i { font-size: .65rem; }
+
+  .hero-title {
+    font-family: var(--font-display);
+    font-size: clamp(3.5rem, 9vw, 8rem);
+    line-height: 0.9;
+    letter-spacing: 2px;
+    margin-bottom: 28px;
+    opacity: 0;
+    animation: fadeUp .8s .7s forwards;
+  }
+  .hero-title span.gold { color: var(--gold); }
+  .hero-title span.stroke {
+    -webkit-text-stroke: 2px var(--white);
+    color: transparent;
+  }
+
+  .hero-desc {
+    font-size: 1.05rem;
+    line-height: 1.7;
+    color: rgba(245,240,232,0.6);
+    max-width: 440px;
+    margin-bottom: 40px;
+    opacity: 0;
+    animation: fadeUp .8s .9s forwards;
+  }
+
+  .hero-btns {
+    display: flex;
+    gap: 16px;
+    flex-wrap: wrap;
+    opacity: 0;
+    animation: fadeUp .8s 1.1s forwards;
+  }
+
+  .btn-primary {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    background: var(--gold);
+    color: var(--black);
+    font-family: var(--font-body);
+    font-size: .78rem;
+    font-weight: 700;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    padding: 14px 28px;
+    border-radius: 2px;
+    border: none;
+    cursor: pointer;
+    text-decoration: none;
+    transition: all .3s;
+    position: relative;
+    overflow: hidden;
+  }
+  .btn-primary::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: #f0d060;
+    transform: scaleX(0);
+    transform-origin: right;
+    transition: transform .3s ease;
+  }
+  .btn-primary:hover::before { transform: scaleX(1); transform-origin: left; }
+  .btn-primary span, .btn-primary i { position: relative; z-index: 1; }
+  .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 12px 32px rgba(232,196,74,0.25); }
+
+  .btn-secondary {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    background: transparent;
+    color: var(--white);
+    font-family: var(--font-body);
+    font-size: .78rem;
+    font-weight: 600;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    padding: 14px 28px;
+    border-radius: 2px;
+    border: 1px solid rgba(245,240,232,0.2);
+    cursor: pointer;
+    text-decoration: none;
+    transition: all .3s;
+  }
+  .btn-secondary:hover {
+    border-color: var(--white);
+    background: rgba(255,255,255,0.05);
+    transform: translateY(-2px);
+  }
+
+  .hero-stats {
+    display: flex;
+    gap: 40px;
+    margin-top: 60px;
+    padding-top: 40px;
+    border-top: 1px solid var(--border);
+    opacity: 0;
+    animation: fadeUp .8s 1.3s forwards;
+  }
+  .stat-item { }
+  .stat-num {
+    font-family: var(--font-display);
+    font-size: 2rem;
+    letter-spacing: 2px;
+    color: var(--gold);
+    display: block;
+  }
+  .stat-label {
+    font-size: .72rem;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: rgba(245,240,232,0.4);
+  }
+
+  /* HERO RIGHT */
+  .hero-right {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    opacity: 0;
+    animation: fadeIn 1s 1.2s forwards;
+  }
+
+  .hero-card-stack {
+    position: relative;
+    width: 340px;
+    height: 420px;
+  }
+
+  .dog-card {
+    position: absolute;
+    width: 280px;
+    height: 360px;
+    border-radius: 6px;
+    overflow: hidden;
+    border: 1px solid var(--border);
+    background: var(--card);
+  }
+
+  .dog-card.card-1 {
+    top: 0; left: 0;
+    transform: rotate(-4deg);
+    z-index: 1;
+  }
+  .dog-card.card-2 {
+    top: 30px; left: 60px;
+    transform: rotate(3deg);
+    z-index: 2;
+    transition: transform .4s ease;
+  }
+  .hero-card-stack:hover .dog-card.card-2 {
+    transform: rotate(0deg) translateY(-10px);
+  }
+
+  .dog-card-inner {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+    gap: 16px;
+  }
+
+  .dog-icon-large {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 3.5rem;
+  }
+  .card-1 .dog-icon-large { background: rgba(232,196,74,0.1); color: var(--gold); }
+  .card-2 .dog-icon-large { background: rgba(214,48,49,0.1); color: var(--red); }
+
+  .dog-card-breed {
+    font-family: var(--font-display);
+    font-size: 1.4rem;
+    letter-spacing: 2px;
+    text-align: center;
+  }
+  .dog-card-desc {
+    font-size: .78rem;
+    color: rgba(245,240,232,0.45);
+    text-align: center;
+    line-height: 1.5;
+  }
+
+  .card-badge {
+    position: absolute;
+    top: 14px;
+    right: 14px;
+    background: var(--gold);
+    color: var(--black);
+    font-family: var(--font-body);
+    font-size: .6rem;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    padding: 4px 10px;
+    border-radius: 2px;
+  }
+  .card-2 .card-badge { background: var(--red); color: var(--white); }
+
+  /* FLOATING ICONS */
+  .float-icon {
+    position: absolute;
+    font-size: 1.2rem;
+    color: rgba(232,196,74,0.3);
+    animation: floatY 3s ease-in-out infinite;
+  }
+  .float-icon:nth-child(1) { top: -20px; right: 20px; animation-delay: 0s; }
+  .float-icon:nth-child(2) { bottom: 20px; left: -20px; animation-delay: .8s; }
+  .float-icon:nth-child(3) { top: 50%; right: -30px; animation-delay: 1.5s; }
+  @keyframes floatY { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-12px)} }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(30px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes fadeIn {
+    from { opacity: 0; transform: scale(.95); }
+    to { opacity: 1; transform: scale(1); }
+  }
+
+  /* SCROLL INDICATOR */
+  .scroll-indicator {
+    position: absolute;
+    bottom: 32px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    opacity: 0;
+    animation: fadeIn .8s 2s forwards;
+  }
+  .scroll-indicator span {
+    font-family: var(--font-body);
+    font-size: .65rem;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: rgba(245,240,232,0.35);
+  }
+  .scroll-line {
+    width: 1px;
+    height: 40px;
+    background: linear-gradient(to bottom, var(--gold), transparent);
+    animation: scrollDown 1.5s ease-in-out infinite;
+  }
+  @keyframes scrollDown { 0%{opacity:1;transform:scaleY(1) translateY(0)} 100%{opacity:0;transform:scaleY(.3) translateY(20px)} }
+
+  /* SECTION BASE */
+  section { padding: clamp(60px, 10vw, 120px) clamp(20px, 5vw, 80px); position: relative; }
+  .section-label {
+    font-family: var(--font-body);
+    font-size: .65rem;
+    letter-spacing: 5px;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .section-label::before {
+    content: '';
+    width: 30px;
+    height: 1px;
+    background: var(--gold);
+  }
+  .section-title {
+    font-family: var(--font-display);
+    font-size: clamp(2.5rem, 6vw, 5rem);
+    line-height: 0.95;
+    letter-spacing: 1px;
+    margin-bottom: 20px;
+  }
+  .section-title .gold { color: var(--gold); }
+  .section-desc {
+    font-size: 1rem;
+    color: rgba(245,240,232,0.55);
+    line-height: 1.7;
+    max-width: 500px;
+  }
+
+  /* SCROLL REVEAL */
+  .reveal {
+    opacity: 0;
+    transform: translateY(40px);
+    transition: opacity .7s ease, transform .7s ease;
+  }
+  .reveal.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* MARQUEE */
+  .marquee-section {
+    padding: 0;
+    overflow: hidden;
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+    background: rgba(232,196,74,0.03);
+  }
+  .marquee-track {
+    display: flex;
+    gap: 0;
+    animation: marquee 20s linear infinite;
+    width: max-content;
+  }
+  .marquee-item {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    padding: 18px 40px;
+    font-family: var(--font-display);
+    font-size: 1rem;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: rgba(245,240,232,0.3);
+    white-space: nowrap;
+  }
+  .marquee-item i { color: var(--gold); font-size: .9rem; }
+  @keyframes marquee { from{transform:translateX(0)} to{transform:translateX(-50%)} }
+
+  /* BREEDS SECTION */
+  #breeds { background: var(--dark); }
+  .breeds-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2px;
+    margin-top: 60px;
+  }
+  .breed-block {
+    padding: clamp(40px, 6vw, 80px);
+    position: relative;
+    overflow: hidden;
+    cursor: pointer;
+    transition: background .4s;
+  }
+  .breed-block.chihuahua { background: rgba(232,196,74,0.04); border: 1px solid rgba(232,196,74,0.1); }
+  .breed-block.pitbull { background: rgba(214,48,49,0.04); border: 1px solid rgba(214,48,49,0.1); }
+  .breed-block:hover { background: rgba(232,196,74,0.08); }
+  .breed-block.pitbull:hover { background: rgba(214,48,49,0.08); }
+
+  .breed-icon-wrap {
+    width: 90px;
+    height: 90px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2.5rem;
+    margin-bottom: 28px;
+    transition: transform .4s;
+  }
+  .chihuahua .breed-icon-wrap { background: rgba(232,196,74,0.12); color: var(--gold); }
+  .pitbull .breed-icon-wrap { background: rgba(214,48,49,0.12); color: var(--red); }
+  .breed-block:hover .breed-icon-wrap { transform: scale(1.1) rotate(-5deg); }
+
+  .breed-name {
+    font-family: var(--font-display);
+    font-size: clamp(2rem, 5vw, 3.5rem);
+    letter-spacing: 2px;
+    margin-bottom: 14px;
+  }
+  .chihuahua .breed-name { color: var(--gold); }
+  .pitbull .breed-name { color: var(--red); }
+
+  .breed-desc {
+    font-size: .95rem;
+    color: rgba(245,240,232,0.5);
+    line-height: 1.7;
+    max-width: 380px;
+    margin-bottom: 28px;
+  }
+
+  .breed-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  .breed-tag {
+    font-family: var(--font-body);
+    font-size: .65rem;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    padding: 6px 14px;
+    border-radius: 2px;
+    border: 1px solid;
+  }
+  .chihuahua .breed-tag { border-color: rgba(232,196,74,0.3); color: var(--gold); }
+  .pitbull .breed-tag { border-color: rgba(214,48,49,0.3); color: var(--red); }
+
+  .breed-bg-num {
+    position: absolute;
+    bottom: -30px;
+    right: -10px;
+    font-family: var(--font-display);
+    font-size: 10rem;
+    line-height: 1;
+    opacity: 0.04;
+    pointer-events: none;
+    user-select: none;
+  }
+
+  /* VIDEOS SECTION */
+  #videos { }
+  .videos-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    margin-bottom: 50px;
+    flex-wrap: wrap;
+    gap: 20px;
+  }
+
+  .videos-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+  }
+
+  .video-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    overflow: hidden;
+    cursor: pointer;
+    transition: all .4s;
+    position: relative;
+  }
+  .video-card:hover {
+    border-color: rgba(232,196,74,0.5);
+    transform: translateY(-6px);
+    box-shadow: 0 24px 60px rgba(0,0,0,0.5);
+  }
+  .video-card.featured {
+    grid-column: span 2;
+  }
+
+  .video-thumb {
+    position: relative;
+    aspect-ratio: 16/9;
+    background: #1a1a1f;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .video-thumb-bg {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .thumb-dog-icon {
+    font-size: 5rem;
+    opacity: 0.08;
+    transition: opacity .3s;
+  }
+  .video-card:hover .thumb-dog-icon { opacity: 0.15; }
+
+  .play-btn {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background: rgba(232,196,74,0.15);
+    border: 2px solid var(--gold);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--gold);
+    font-size: 1.1rem;
+    position: relative;
+    z-index: 1;
+    transition: all .3s;
+    padding-left: 4px;
+  }
+  .video-card:hover .play-btn {
+    background: var(--gold);
+    color: var(--black);
+    transform: scale(1.1);
+  }
+  .video-card.featured .play-btn {
+    width: 72px; height: 72px;
+    font-size: 1.3rem;
+  }
+
+  .video-duration {
+    position: absolute;
+    bottom: 12px;
+    right: 12px;
+    background: rgba(0,0,0,0.7);
+    color: var(--white);
+    font-family: var(--font-body);
+    font-size: .7rem;
+    letter-spacing: 1px;
+    padding: 4px 10px;
+    border-radius: 2px;
+  }
+
+  .video-info { padding: 20px; }
+  .video-breed-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-family: var(--font-body);
+    font-size: .62rem;
+    letter-spacing: 2.5px;
+    text-transform: uppercase;
+    margin-bottom: 10px;
+    padding: 4px 10px;
+    border-radius: 2px;
+  }
+  .video-breed-tag.chi { background: rgba(232,196,74,0.1); color: var(--gold); }
+  .video-breed-tag.pit { background: rgba(214,48,49,0.1); color: var(--red); }
+  .video-breed-tag.both { background: rgba(255,255,255,0.06); color: rgba(245,240,232,0.6); }
+
+  .video-title {
+    font-family: var(--font-body);
+    font-size: 1rem;
+    font-weight: 700;
+    line-height: 1.4;
+    margin-bottom: 12px;
+  }
+  .video-card.featured .video-title { font-size: 1.2rem; }
+
+  .video-meta {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    font-size: .75rem;
+    color: rgba(245,240,232,0.4);
+  }
+  .video-meta i { font-size: .7rem; }
+
+  /* FACEBOOK SECTION */
+  #facebook {
+    background: var(--dark);
+    text-align: center;
+  }
+  .fb-section-inner {
+    max-width: 700px;
+    margin: 0 auto;
+  }
+  .fb-big-icon {
+    width: 100px;
+    height: 100px;
+    background: rgba(24, 119, 242, 0.12);
+    border: 1px solid rgba(24, 119, 242, 0.3);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2.5rem;
+    color: #1877f2;
+    margin: 0 auto 32px;
+    transition: transform .4s;
+  }
+  .fb-big-icon:hover { transform: scale(1.1) rotate(5deg); }
+
+  .fb-handle {
+    font-family: var(--font-display);
+    font-size: clamp(2rem, 5vw, 4rem);
+    letter-spacing: 2px;
+    color: var(--white);
+    margin-bottom: 16px;
+  }
+  .fb-handle span { color: #1877f2; }
+
+  .fb-page-url {
+    font-family: var(--font-body);
+    font-size: .8rem;
+    letter-spacing: 2px;
+    color: rgba(245,240,232,0.35);
+    margin-bottom: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+  }
+  .fb-page-url i { font-size: .7rem; color: #1877f2; }
+
+  .fb-stats-row {
+    display: flex;
+    justify-content: center;
+    gap: 48px;
+    margin-bottom: 40px;
+    padding: 28px 0;
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+  }
+  .fb-stat-num {
+    font-family: var(--font-display);
+    font-size: 2.2rem;
+    letter-spacing: 2px;
+    color: #1877f2;
+    display: block;
+  }
+  .fb-stat-label {
+    font-size: .7rem;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: rgba(245,240,232,0.4);
+  }
+
+  .btn-fb {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    background: #1877f2;
+    color: #fff;
+    font-family: var(--font-body);
+    font-size: .78rem;
+    font-weight: 700;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    padding: 16px 36px;
+    border-radius: 2px;
+    border: none;
+    cursor: pointer;
+    text-decoration: none;
+    transition: all .3s;
+  }
+  .btn-fb:hover {
+    background: #0d6be8;
+    transform: translateY(-2px);
+    box-shadow: 0 12px 32px rgba(24,119,242,0.3);
+  }
+
+  /* GALLERY */
+  #gallery { overflow: hidden; }
+  .gallery-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    grid-template-rows: repeat(2, 200px);
+    gap: 8px;
+    margin-top: 50px;
+  }
+  .gallery-item {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 3px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 3rem;
+    color: rgba(245,240,232,0.08);
+    position: relative;
+    overflow: hidden;
+    cursor: pointer;
+    transition: all .4s;
+  }
+  .gallery-item:hover {
+    border-color: rgba(232,196,74,0.4);
+    color: rgba(232,196,74,0.3);
+  }
+  .gallery-item.big { grid-column: span 2; grid-row: span 2; }
+  .gallery-item.tall { grid-row: span 2; }
+
+  .gallery-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to top, rgba(232,196,74,0.12), transparent);
+    opacity: 0;
+    transition: opacity .3s;
+  }
+  .gallery-item:hover .gallery-overlay { opacity: 1; }
+
+  .gallery-label {
+    position: absolute;
+    bottom: 14px;
+    left: 14px;
+    font-family: var(--font-display);
+    font-size: 1rem;
+    letter-spacing: 2px;
+    color: var(--gold);
+    opacity: 0;
+    transform: translateY(8px);
+    transition: all .3s;
+  }
+  .gallery-item:hover .gallery-label { opacity: 1; transform: translateY(0); }
+
+  /* COMEDY TYPES */
+  #comedy { background: var(--dark); }
+  .comedy-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2px;
+    margin-top: 60px;
+  }
+  .comedy-item {
+    padding: 40px 32px;
+    border: 1px solid var(--border);
+    position: relative;
+    overflow: hidden;
+    cursor: pointer;
+    transition: all .4s;
+  }
+  .comedy-item:hover { background: rgba(255,255,255,0.03); border-color: rgba(232,196,74,0.4); }
+
+  .comedy-num {
+    font-family: var(--font-display);
+    font-size: 5rem;
+    line-height: 1;
+    color: rgba(232,196,74,0.07);
+    position: absolute;
+    top: 16px;
+    right: 20px;
+    pointer-events: none;
+    transition: opacity .3s;
+  }
+  .comedy-item:hover .comedy-num { opacity: 0.15; }
+
+  .comedy-icon {
+    width: 52px;
+    height: 52px;
+    border: 1px solid var(--border);
+    border-radius: 3px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
+    color: var(--gold);
+    margin-bottom: 20px;
+    transition: all .3s;
+  }
+  .comedy-item:hover .comedy-icon { background: var(--gold); color: var(--black); border-color: var(--gold); }
+
+  .comedy-title {
+    font-family: var(--font-body);
+    font-size: 1.05rem;
+    font-weight: 700;
+    margin-bottom: 10px;
+  }
+  .comedy-desc {
+    font-size: .85rem;
+    color: rgba(245,240,232,0.45);
+    line-height: 1.6;
+  }
+
+  /* NEWSLETTER */
+  #notify {
+    text-align: center;
+    background: linear-gradient(135deg, rgba(232,196,74,0.06) 0%, rgba(214,48,49,0.04) 100%);
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+  }
+  .notify-inner { max-width: 600px; margin: 0 auto; }
+  .notify-form {
+    display: flex;
+    gap: 0;
+    margin-top: 36px;
+    border: 1px solid var(--border);
+    border-radius: 3px;
+    overflow: hidden;
+    transition: border-color .3s;
+  }
+  .notify-form:focus-within { border-color: var(--gold); }
+  .notify-input {
+    flex: 1;
+    background: transparent;
+    border: none;
+    outline: none;
+    padding: 16px 20px;
+    color: var(--white);
+    font-family: var(--font-text);
+    font-size: .9rem;
+  }
+  .notify-input::placeholder { color: rgba(245,240,232,0.3); }
+  .notify-submit {
+    background: var(--gold);
+    border: none;
+    padding: 0 28px;
+    font-family: var(--font-body);
+    font-size: .72rem;
+    font-weight: 700;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--black);
+    cursor: pointer;
+    transition: background .3s;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .notify-submit:hover { background: #f0d060; }
+  .notify-note {
+    margin-top: 14px;
+    font-size: .75rem;
+    color: rgba(245,240,232,0.3);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+  }
+  .notify-note i { font-size: .65rem; color: var(--gold); }
+
+  /* FOOTER */
+  footer {
+    padding: 60px clamp(20px, 5vw, 80px) 32px;
+    border-top: 1px solid var(--border);
+  }
+  .footer-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 48px;
+    flex-wrap: wrap;
+    gap: 40px;
+  }
+  .footer-logo {
+    font-family: var(--font-display);
+    font-size: 2rem;
+    letter-spacing: 4px;
+    color: var(--gold);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 14px;
+  }
+  .footer-logo i { color: var(--red); font-size: 1.4rem; }
+  .footer-tagline {
+    font-size: .82rem;
+    color: rgba(245,240,232,0.35);
+    max-width: 280px;
+    line-height: 1.6;
+  }
+
+  .footer-links-col h4 {
+    font-family: var(--font-body);
+    font-size: .65rem;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: rgba(245,240,232,0.4);
+    margin-bottom: 18px;
+  }
+  .footer-links-col ul { list-style: none; display: flex; flex-direction: column; gap: 10px; }
+  .footer-links-col a {
+    font-size: .85rem;
+    color: rgba(245,240,232,0.55);
+    text-decoration: none;
+    transition: color .3s;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .footer-links-col a:hover { color: var(--gold); }
+  .footer-links-col a i { font-size: .7rem; color: var(--gold); opacity: 0; transition: opacity .3s; }
+  .footer-links-col a:hover i { opacity: 1; }
+
+  .footer-social {
+    display: flex;
+    gap: 12px;
+    margin-top: 24px;
+  }
+  .social-btn {
+    width: 40px;
+    height: 40px;
+    border: 1px solid var(--border);
+    border-radius: 3px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: rgba(245,240,232,0.5);
+    font-size: .9rem;
+    text-decoration: none;
+    transition: all .3s;
+    cursor: pointer;
+  }
+  .social-btn:hover { border-color: var(--gold); color: var(--gold); background: rgba(232,196,74,0.06); }
+  .social-btn.fb:hover { border-color: #1877f2; color: #1877f2; background: rgba(24,119,242,0.06); }
+
+  .footer-bottom {
+    padding-top: 24px;
+    border-top: 1px solid var(--border);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+  .footer-copy {
+    font-size: .75rem;
+    color: rgba(245,240,232,0.25);
+  }
+  .footer-made {
+    font-size: .75rem;
+    color: rgba(245,240,232,0.25);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .footer-made i { color: var(--red); font-size: .7rem; }
+
+  /* TOAST */
+  .toast {
+    position: fixed;
+    bottom: 32px;
+    left: 50%;
+    transform: translateX(-50%) translateY(20px);
+    background: var(--gold);
+    color: var(--black);
+    font-family: var(--font-body);
+    font-size: .78rem;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    padding: 14px 28px;
+    border-radius: 3px;
+    opacity: 0;
+    transition: all .4s;
+    z-index: 9990;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    pointer-events: none;
+  }
+  .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+  /* BACK TO TOP */
+  .back-top {
+    position: fixed;
+    bottom: 32px;
+    right: 32px;
+    width: 48px;
+    height: 48px;
+    background: var(--gold);
+    border: none;
+    border-radius: 3px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--black);
+    font-size: 1rem;
+    z-index: 900;
+    opacity: 0;
+    transform: translateY(20px);
+    transition: all .4s;
+  }
+  .back-top.visible { opacity: 1; transform: translateY(0); }
+  .back-top:hover { background: #f0d060; transform: translateY(-3px); }
+
+  /* RESPONSIVE */
+  @media (max-width: 1024px) {
+    #hero { grid-template-columns: 1fr; text-align: center; }
+    .hero-left { order: 2; }
+    .hero-right { order: 1; margin-bottom: 48px; justify-content: center; }
+    .hero-btns { justify-content: center; }
+    .hero-stats { justify-content: center; }
+    .hero-desc { margin: 0 auto 40px; }
+    .breeds-grid { grid-template-columns: 1fr; }
+    .videos-grid { grid-template-columns: repeat(2, 1fr); }
+    .video-card.featured { grid-column: span 2; }
+    .comedy-grid { grid-template-columns: repeat(2, 1fr); }
+    .gallery-grid { grid-template-columns: repeat(2, 1fr); grid-template-rows: auto; }
+    .gallery-item.big, .gallery-item.tall { grid-column: span 1; grid-row: span 1; }
+  }
+  @media (max-width: 768px) {
+    .nav-links { display: none; }
+    .hamburger { display: flex; }
+    .hero-card-stack { width: 280px; height: 340px; }
+    .dog-card { width: 230px; height: 300px; }
+    .videos-grid { grid-template-columns: 1fr; }
+    .video-card.featured { grid-column: span 1; }
+    .comedy-grid { grid-template-columns: 1fr; }
+    .gallery-grid { grid-template-columns: 1fr 1fr; }
+    .fb-stats-row { gap: 28px; }
+    .footer-top { flex-direction: column; }
+  }
+</style>
+</head>
+<body>
+
+<!-- LOADER -->
+<div id="loader">
+  <div class="loader-logo">DOGGY DRAMA</div>
+  <div class="loader-bar-track"><div class="loader-bar"></div></div>
+  <div class="loader-text">Loading the drama...</div>
+</div>
+
+<!-- CURSOR -->
+<div class="cursor" id="cursor"></div>
+<div class="cursor-follower" id="cursorFollower"></div>
+
+<!-- MOBILE NAV -->
+<div class="mobile-nav" id="mobileNav">
+  <a href="#hero" onclick="closeMobileNav()">Home</a>
+  <a href="#breeds" onclick="closeMobileNav()">Breeds</a>
+  <a href="#videos" onclick="closeMobileNav()">Videos</a>
+  <a href="#gallery" onclick="closeMobileNav()">Gallery</a>
+  <a href="#facebook" onclick="closeMobileNav()">Facebook</a>
+  <a href="#notify" onclick="closeMobileNav()">Notify Me</a>
+</div>
+
+<!-- NAV -->
+<nav id="navbar">
+  <a href="#hero" class="nav-logo">
+    <i class="fas fa-paw"></i>
+    DOGGY DRAMA CLUB
+  </a>
+  <ul class="nav-links">
+    <li><a href="#breeds">Breeds</a></li>
+    <li><a href="#videos">Videos</a></li>
+    <li><a href="#comedy">Comedy</a></li>
+    <li><a href="#gallery">Gallery</a></li>
+    <li><a href="#facebook">Facebook</a></li>
+    <li><a href="#notify" class="nav-cta">Subscribe</a></li>
+  </ul>
+  <div class="hamburger" id="hamburger" onclick="toggleMobileNav()">
+    <span></span><span></span><span></span>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section id="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-grid-lines"></div>
+
+  <div class="hero-left">
+    <div class="hero-tag">
+      <i class="fas fa-film"></i>
+      Facebook Page — Comedy Videos
+    </div>
+    <h1 class="hero-title">
+      DOGGY<br>
+      <span class="gold">DRAMA</span><br>
+      <span class="stroke">CLUB</span>
+    </h1>
+    <p class="hero-desc">
+      India's most hilarious dog comedy page featuring the tiny but feisty Chihuahua and the big lovable Pitbull — pure comedy, zero filters.
+    </p>
+    <div class="hero-btns">
+      <a href="#facebook" class="btn-primary">
+        <i class="fab fa-facebook-f"></i>
+        <span>Visit Our Page</span>
+      </a>
+      <a href="#videos" class="btn-secondary">
+        <i class="fas fa-play"></i>
+        Watch Videos
+      </a>
+    </div>
+    <div class="hero-stats">
+      <div class="stat-item">
+        <span class="stat-num">50K+</span>
+        <span class="stat-label">Followers</span>
+      </div>
+      <div class="stat-item">
+        <span class="stat-num">200+</span>
+        <span class="stat-label">Videos</span>
+      </div>
+      <div class="stat-item">
+        <span class="stat-num">2M+</span>
+        <span class="stat-label">Views</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="hero-right">
+    <div class="hero-card-stack">
+      <i class="float-icon fas fa-star"></i>
+      <i class="float-icon fas fa-heart"></i>
+      <i class="float-icon fas fa-bolt"></i>
+      <div class="dog-card card-1">
+        <div class="card-badge">Tiny Boss</div>
+        <div class="dog-card-inner">
+          <div class="dog-icon-large"><i class="fas fa-dog"></i></div>
+          <div class="dog-card-breed">CHIHUAHUA</div>
+          <div class="dog-card-desc">Small size. Giant attitude.<br>Always the main character.</div>
+        </div>
+      </div>
+      <div class="dog-card card-2">
+        <div class="card-badge">Big Drama</div>
+        <div class="dog-card-inner">
+          <div class="dog-icon-large"><i class="fas fa-dog"></i></div>
+          <div class="dog-card-breed">PITBULL</div>
+          <div class="dog-card-desc">Big body. Big heart.<br>Biggest drama king ever.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="scroll-indicator">
+    <span>Scroll</span>
+    <div class="scroll-line"></div>
+  </div>
+</section>
+
+<!-- MARQUEE -->
+<div class="marquee-section">
+  <div class="marquee-track" id="marqueeTrack"></div>
+</div>
+
+<!-- BREEDS -->
+<section id="breeds">
+  <div class="reveal">
+    <div class="section-label">Meet The Stars</div>
+    <h2 class="section-title">TWO BREEDS.<br><span class="gold">ONE CLUB.</span></h2>
+    <p class="section-desc">Every video features India's most dramatic dog duo — proving size has nothing to do with personality.</p>
+  </div>
+  <div class="breeds-grid reveal">
+    <div class="breed-block chihuahua">
+      <div class="breed-icon-wrap"><i class="fas fa-dog"></i></div>
+      <div class="breed-name">CHIHUAHUA</div>
+      <p class="breed-desc">
+        The world's smallest dog with the world's biggest attitude. Every Chihuahua believes it's actually a wolf in disguise. Chaos guaranteed.
+      </p>
+      <div class="breed-tags">
+        <span class="breed-tag">Drama Queen</span>
+        <span class="breed-tag">Tiny Terror</span>
+        <span class="breed-tag">Boss Energy</span>
+        <span class="breed-tag">Zero Chill</span>
+      </div>
+      <div class="breed-bg-num">01</div>
+    </div>
+    <div class="breed-block pitbull">
+      <div class="breed-icon-wrap"><i class="fas fa-dog"></i></div>
+      <div class="breed-name">PITBULL</div>
+      <p class="breed-desc">
+        Built like a tank, soft like a cloud. The Pitbull doesn't understand why the tiny one keeps yelling — but somehow always gets blamed.
+      </p>
+      <div class="breed-tags">
+        <span class="breed-tag">Gentle Giant</span>
+        <span class="breed-tag">Drama King</span>
+        <span class="breed-tag">Big Baby</span>
+        <span class="breed-tag">Pure Love</span>
+      </div>
+      <div class="breed-bg-num">02</div>
+    </div>
+  </div>
+</section>
+
+<!-- VIDEOS -->
+<section id="videos">
+  <div class="videos-header reveal">
+    <div>
+      <div class="section-label">Latest Content</div>
+      <h2 class="section-title">VIRAL<br><span class="gold">VIDEOS</span></h2>
+    </div>
+    <a href="#facebook" class="btn-secondary" style="flex-shrink:0;">
+      <i class="fab fa-facebook-f"></i>
+      View All on Facebook
+    </a>
+  </div>
+  <div class="videos-grid reveal">
+    <div class="video-card featured" onclick="showToast('Opening Facebook Page...')">
+      <div class="video-thumb">
+        <div class="video-thumb-bg"><i class="fas fa-dog thumb-dog-icon"></i></div>
+        <div class="play-btn"><i class="fas fa-play"></i></div>
+        <span class="video-duration">2:34</span>
+      </div>
+      <div class="video-info">
+        <span class="video-breed-tag both"><i class="fas fa-users"></i>Chihuahua + Pitbull</span>
+        <div class="video-title">Chihuahua Tries to Steal Food From a Pitbull — Doesn't Go as Planned</div>
+        <div class="video-meta">
+          <span><i class="fas fa-eye"></i> 420K views</span>
+          <span><i class="fas fa-heart"></i> 38K likes</span>
+          <span><i class="fas fa-share"></i> 12K shares</span>
+        </div>
+      </div>
+    </div>
+    <div class="video-card" onclick="showToast('Opening Facebook Page...')">
+      <div class="video-thumb">
+        <div class="video-thumb-bg"><i class="fas fa-dog thumb-dog-icon"></i></div>
+        <div class="play-btn"><i class="fas fa-play"></i></div>
+        <span class="video-duration">1:45</span>
+      </div>
+      <div class="video-info">
+        <span class="video-breed-tag chi"><i class="fas fa-dog"></i>Chihuahua</span>
+        <div class="video-title">Chihuahua Judges Every Dog at the Park</div>
+        <div class="video-meta">
+          <span><i class="fas fa-eye"></i> 280K</span>
+          <span><i class="fas fa-heart"></i> 22K</span>
+        </div>
+      </div>
+    </div>
+    <div class="video-card" onclick="showToast('Opening Facebook Page...')">
+      <div class="video-thumb">
+        <div class="video-thumb-bg"><i class="fas fa-dog thumb-dog-icon"></i></div>
+        <div class="play-btn"><i class="fas fa-play"></i></div>
+        <span class="video-duration">3:12</span>
+      </div>
+      <div class="video-info">
+        <span class="video-breed-tag pit"><i class="fas fa-dog"></i>Pitbull</span>
+        <div class="video-title">Big Pitbull Scared of Tiny Vacuum Cleaner</div>
+        <div class="video-meta">
+          <span><i class="fas fa-eye"></i> 195K</span>
+          <span><i class="fas fa-heart"></i> 18K</span>
+        </div>
+      </div>
+    </div>
+    <div class="video-card" onclick="showToast('Opening Facebook Page...')">
+      <div class="video-thumb">
+        <div class="video-thumb-bg"><i class="fas fa-dog thumb-dog-icon"></i></div>
+        <div class="play-btn"><i class="fas fa-play"></i></div>
+        <span class="video-duration">2:08</span>
+      </div>
+      <div class="video-info">
+        <span class="video-breed-tag both"><i class="fas fa-users"></i>Duo</span>
+        <div class="video-title">Who Gets the Couch? A 10-Minute Debate.</div>
+        <div class="video-meta">
+          <span><i class="fas fa-eye"></i> 340K</span>
+          <span><i class="fas fa-heart"></i> 29K</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- COMEDY SECTION -->
+<section id="comedy">
+  <div class="reveal">
+    <div class="section-label">What We Do</div>
+    <h2 class="section-title">THE ART OF<br><span class="gold">DOG COMEDY</span></h2>
+  </div>
+  <div class="comedy-grid reveal">
+    <div class="comedy-item">
+      <div class="comedy-num">01</div>
+      <div class="comedy-icon"><i class="fas fa-video"></i></div>
+      <div class="comedy-title">Reaction Videos</div>
+      <p class="comedy-desc">Dogs reacting to cats, strangers, mirrors, and their own reflections with maximum drama.</p>
+    </div>
+    <div class="comedy-item">
+      <div class="comedy-num">02</div>
+      <div class="comedy-icon"><i class="fas fa-utensils"></i></div>
+      <div class="comedy-title">Food Drama</div>
+      <p class="comedy-desc">The daily territorial war over treats, kibble, and who stole whose bowl — resolved never.</p>
+    </div>
+    <div class="comedy-item">
+      <div class="comedy-num">03</div>
+      <div class="comedy-icon"><i class="fas fa-couch"></i></div>
+      <div class="comedy-title">Space Battles</div>
+      <p class="comedy-desc">A 5 lb Chihuahua claiming the entire bed. A 60 lb Pitbull sleeping on the floor. Reality.</p>
+    </div>
+    <div class="comedy-item">
+      <div class="comedy-num">04</div>
+      <div class="comedy-icon"><i class="fas fa-walking"></i></div>
+      <div class="comedy-title">Walk Adventures</div>
+      <p class="comedy-desc">Two very different opinions on which direction to go. Neither is willing to compromise.</p>
+    </div>
+    <div class="comedy-item">
+      <div class="comedy-num">05</div>
+      <div class="comedy-icon"><i class="fas fa-bath"></i></div>
+      <div class="comedy-title">Bath Time Crisis</div>
+      <p class="comedy-desc">A Chihuahua who acts like water is lava. A Pitbull who somehow loves splashing.</p>
+    </div>
+    <div class="comedy-item">
+      <div class="comedy-num">06</div>
+      <div class="comedy-icon"><i class="fas fa-moon"></i></div>
+      <div class="comedy-title">Bedtime Chaos</div>
+      <p class="comedy-desc">10 PM negotiations over sleep positions. Chihuahua always wins. Pitbull always complies.</p>
+    </div>
+  </div>
+</section>
+
+<!-- GALLERY -->
+<section id="gallery">
+  <div class="reveal">
+    <div class="section-label">Photo Moments</div>
+    <h2 class="section-title">FRAME BY<br><span class="gold">FRAME</span></h2>
+    <p class="section-desc">Behind-the-scenes moments and the best stills from our most viral videos.</p>
+  </div>
+  <div class="gallery-grid reveal">
+    <div class="gallery-item big">
+      <i class="fas fa-camera"></i>
+      <div class="gallery-overlay"></div>
+      <div class="gallery-label">The Dynamic Duo</div>
+    </div>
+    <div class="gallery-item">
+      <i class="fas fa-dog"></i>
+      <div class="gallery-overlay"></div>
+      <div class="gallery-label">Chihuahua Mode</div>
+    </div>
+    <div class="gallery-item">
+      <i class="fas fa-dog"></i>
+      <div class="gallery-overlay"></div>
+      <div class="gallery-label">Pitbull Vibes</div>
+    </div>
+    <div class="gallery-item tall">
+      <i class="fas fa-film"></i>
+      <div class="gallery-overlay"></div>
+      <div class="gallery-label">Behind the Scene</div>
+    </div>
+    <div class="gallery-item">
+      <i class="fas fa-laugh"></i>
+      <div class="gallery-overlay"></div>
+      <div class="gallery-label">Comedy Gold</div>
+    </div>
+    <div class="gallery-item">
+      <i class="fas fa-heart"></i>
+      <div class="gallery-overlay"></div>
+      <div class="gallery-label">Best Friends</div>
+    </div>
+  </div>
+</section>
+
+<!-- FACEBOOK CTA -->
+<section id="facebook">
+  <div class="fb-section-inner reveal">
+    <div class="fb-big-icon"><i class="fab fa-facebook-f"></i></div>
+    <div class="section-label" style="justify-content:center;">Find Us On Facebook</div>
+    <h2 class="fb-handle">DOGGY <span>DRAMA</span> CLUB</h2>
+    <p class="fb-page-url">
+      <i class="fas fa-link"></i>
+      facebook.com/DoggyDramaClub
+    </p>
+    <div class="fb-stats-row">
+      <div>
+        <span class="fb-stat-num">50K+</span>
+        <span class="fb-stat-label">Page Likes</span>
+      </div>
+      <div>
+        <span class="fb-stat-num">200+</span>
+        <span class="fb-stat-label">Videos</span>
+      </div>
+      <div>
+        <span class="fb-stat-num">Daily</span>
+        <span class="fb-stat-label">New Content</span>
+      </div>
+    </div>
+    <a href="https://www.facebook.com/DoggyDramaClub" target="_blank" class="btn-fb">
+      <i class="fab fa-facebook-f"></i>
+      Like Our Page on Facebook
+    </a>
+  </div>
+</section>
+
+<!-- NOTIFY -->
+<section id="notify">
+  <div class="notify-inner reveal">
+    <div class="section-label" style="justify-content:center;">Never Miss Drama</div>
+    <h2 class="section-title" style="font-size:clamp(2rem,5vw,3.5rem);">GET NOTIFIED<br><span class="gold">EVERY UPLOAD</span></h2>
+    <p class="section-desc" style="margin:0 auto 8px;text-align:center;">Drop your email and be the first to watch every new comedy video before the internet goes crazy.</p>
+    <div class="notify-form">
+      <input type="email" class="notify-input" id="notifyInput" placeholder="yourname@email.com" />
+      <button class="notify-submit" onclick="handleSubscribe()">
+        <i class="fas fa-bell"></i>
+        Notify Me
+      </button>
+    </div>
+    <p class="notify-note">
+      <i class="fas fa-lock"></i>
+      No spam, ever. Unsubscribe anytime.
+    </p>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-top">
+    <div>
+      <div class="footer-logo">
+        <i class="fas fa-paw"></i>
+        DOGGY DRAMA CLUB
+      </div>
+      <p class="footer-tagline">India's most dramatic dog comedy page, featuring Chihuahua and Pitbull content daily on Facebook.</p>
+      <div class="footer-social">
+        <a class="social-btn fb" href="https://www.facebook.com/DoggyDramaClub" target="_blank" title="Facebook"><i class="fab fa-facebook-f"></i></a>
+        <a class="social-btn" href="#" title="Instagram"><i class="fab fa-instagram"></i></a>
+        <a class="social-btn" href="#" title="YouTube"><i class="fab fa-youtube"></i></a>
+        <a class="social-btn" href="#" title="TikTok"><i class="fab fa-tiktok"></i></a>
+      </div>
+    </div>
+    <div class="footer-links-col">
+      <h4>Navigation</h4>
+      <ul>
+        <li><a href="#hero"><i class="fas fa-chevron-right"></i>Home</a></li>
+        <li><a href="#breeds"><i class="fas fa-chevron-right"></i>Breeds</a></li>
+        <li><a href="#videos"><i class="fas fa-chevron-right"></i>Videos</a></li>
+        <li><a href="#comedy"><i class="fas fa-chevron-right"></i>Comedy</a></li>
+        <li><a href="#gallery"><i class="fas fa-chevron-right"></i>Gallery</a></li>
+      </ul>
+    </div>
+    <div class="footer-links-col">
+      <h4>Stars</h4>
+      <ul>
+        <li><a href="#breeds"><i class="fas fa-chevron-right"></i>Chihuahua</a></li>
+        <li><a href="#breeds"><i class="fas fa-chevron-right"></i>Pitbull</a></li>
+        <li><a href="#videos"><i class="fas fa-chevron-right"></i>Latest Videos</a></li>
+        <li><a href="#gallery"><i class="fas fa-chevron-right"></i>Photo Gallery</a></li>
+        <li><a href="#facebook"><i class="fas fa-chevron-right"></i>Facebook Page</a></li>
+      </ul>
+    </div>
+    <div class="footer-links-col">
+      <h4>Connect</h4>
+      <ul>
+        <li><a href="#notify"><i class="fas fa-chevron-right"></i>Subscribe</a></li>
+        <li><a href="#facebook"><i class="fas fa-chevron-right"></i>Like on Facebook</a></li>
+        <li><a href="#"><i class="fas fa-chevron-right"></i>Business Enquiry</a></li>
+        <li><a href="#"><i class="fas fa-chevron-right"></i>Collaboration</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span class="footer-copy">&copy; 2025 Doggy Drama Club. All rights reserved.</span>
+    <span class="footer-made">Made with <i class="fas fa-heart"></i> for dog lovers</span>
+  </div>
+</footer>
+
+<!-- BACK TO TOP -->
+<button class="back-top" id="backTop" onclick="window.scrollTo({top:0,behavior:'smooth'})">
+  <i class="fas fa-arrow-up"></i>
+</button>
+
+<!-- TOAST -->
+<div class="toast" id="toast">
+  <i class="fas fa-check-circle"></i>
+  <span id="toastMsg"></span>
+</div>
+
+<script>
+  // LOADER
+  window.addEventListener('load', () => {
+    setTimeout(() => {
+      document.getElementById('loader').classList.add('hidden');
+    }, 2200);
+  });
+
+  // CURSOR
+  const cursor = document.getElementById('cursor');
+  const follower = document.getElementById('cursorFollower');
+  let mx = 0, my = 0, fx = 0, fy = 0;
+  document.addEventListener('mousemove', e => {
+    mx = e.clientX; my = e.clientY;
+    cursor.style.left = mx - 6 + 'px';
+    cursor.style.top = my - 6 + 'px';
+  });
+  function animFollower() {
+    fx += (mx - fx) * 0.15;
+    fy += (my - fy) * 0.15;
+    follower.style.left = fx - 18 + 'px';
+    follower.style.top = fy - 18 + 'px';
+    requestAnimationFrame(animFollower);
+  }
+  animFollower();
+
+  // NAV SCROLL
+  window.addEventListener('scroll', () => {
+    const nb = document.getElementById('navbar');
+    const bt = document.getElementById('backTop');
+    nb.classList.toggle('scrolled', window.scrollY > 60);
+    bt.classList.toggle('visible', window.scrollY > 400);
+  });
+
+  // MOBILE NAV
+  function toggleMobileNav() {
+    document.getElementById('mobileNav').classList.toggle('open');
+  }
+  function closeMobileNav() {
+    document.getElementById('mobileNav').classList.remove('open');
+  }
+
+  // SCROLL REVEAL
+  const obs = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.classList.add('visible');
+        // Stagger children
+        const kids = e.target.querySelectorAll('.video-card, .comedy-item, .gallery-item, .breed-block');
+        kids.forEach((k, i) => {
+          k.style.transitionDelay = (i * 0.08) + 's';
+          k.classList.add('reveal', 'visible');
+        });
+      }
+    });
+  }, { threshold: 0.1 });
+  document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
+
+  // MARQUEE
+  const marqueeItems = [
+    { icon: 'fa-dog', text: 'Chihuahua Comedy' },
+    { icon: 'fa-dog', text: 'Pitbull Drama' },
+    { icon: 'fa-film', text: 'Daily Videos' },
+    { icon: 'fa-star', text: 'Viral Content' },
+    { icon: 'fa-heart', text: 'Dog Lovers' },
+    { icon: 'fa-laugh', text: 'Non-Stop Comedy' },
+    { icon: 'fa-facebook-f', text: 'Follow on Facebook' },
+    { icon: 'fa-paw', text: 'Doggy Drama Club' },
+  ];
+  const track = document.getElementById('marqueeTrack');
+  let html = '';
+  [...marqueeItems, ...marqueeItems].forEach(item => {
+    html += `<div class="marquee-item"><i class="fas ${item.icon}"></i>${item.text}</div>`;
+  });
+  track.innerHTML = html;
+
+  // TOAST
+  let toastTimeout;
+  function showToast(msg) {
+    clearTimeout(toastTimeout);
+    const t = document.getElementById('toast');
+    document.getElementById('toastMsg').textContent = msg;
+    t.classList.add('show');
+    toastTimeout = setTimeout(() => t.classList.remove('show'), 3000);
+  }
+
+  // SUBSCRIBE
+  function handleSubscribe() {
+    const val = document.getElementById('notifyInput').value.trim();
+    if (!val || !val.includes('@')) {
+      showToast('Please enter a valid email!');
+      return;
+    }
+    document.getElementById('notifyInput').value = '';
+    showToast('Subscribed! Drama incoming soon...');
+  }
+
+  // NOTIFY INPUT ENTER
+  document.getElementById('notifyInput').addEventListener('keydown', e => {
+    if (e.key === 'Enter') handleSubscribe();
+  });
+</script>
+</body>
 </html>
